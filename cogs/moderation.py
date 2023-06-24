@@ -110,12 +110,6 @@ class Moderation(commands.Cog, name="Moderation"):
         embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
                          icon_url=interaction.author.avatar)
 
-        # PROOF
-        if msg.reference and isinstance(msg.reference.resolved, disnake.Message):
-            embed.add_field(name=f"ДОКАЗАТЕЛЬСТВО",
-                            value=f"```{msg.reference.resolved.content}```",
-                            inline=True)
-
         await adds(embed=embed)
 
         await member.timeout(duration=duration, reason=f"{moderator}: {reason}")
@@ -208,12 +202,6 @@ class Moderation(commands.Cog, name="Moderation"):
                         inline=True)
         embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
                          icon_url=interaction.author.avatar)
-
-        # PROOF
-        if interaction.target.reference and isinstance(interaction.target.reference.resolved, disnake.Message):
-            embed.add_field(name=f"ДОКАЗАТЕЛЬСТВО",
-                            value=f"```{interaction.target.reference.resolved.content}```",
-                            inline=True)
 
         await adds(embed)
 
