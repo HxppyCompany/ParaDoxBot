@@ -205,7 +205,7 @@ class Moderation(commands.Cog, name="Moderation"):
 
         await adds(embed)
 
-        await member.ban(reason=f'{moderator}: {reason}')
+        await member.add_roles(interaction.guild.get_role(Roles.localban))
         await interaction.send(embed=embed, delete_after=60.0)
 
     '''Unban'''
@@ -254,7 +254,7 @@ class Moderation(commands.Cog, name="Moderation"):
 
         await adds(embed)
 
-        await interaction.guild.unban(member, reason='{moderator}: {reason}')
+        await member.remove_roles(interaction.guild.get_role(Roles.localban))
         await interaction.send(embed=embed, delete_after=60)
 
     '''Kick'''

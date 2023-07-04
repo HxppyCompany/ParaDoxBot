@@ -1,5 +1,5 @@
-disnake~=2.8.1
-pymongo~=4.3.3
+disnake~=2.9.0
+pymongo~=4.4.0
 dnspython~=2.3.0
 idna~=3.4
 pip~=23.1.2
