@@ -208,7 +208,7 @@ class Moderation(commands.Cog, name="Moderation"):
         await adds(embed)
         for i in member.roles:
             try:
-                await member.remove_roles(i)
+                await member.remove_roles(interaction.guild.get_role(i))
             except:
                 pass
         await member.add_roles(interaction.guild.get_role(Roles.localban), reason)
