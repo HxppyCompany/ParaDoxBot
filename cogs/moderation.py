@@ -72,11 +72,8 @@ class Moderation(commands.Cog, name="Moderation"):
         # VARIABLES
         interval = None if time.isdigit() else time[-1]
         word = None
-        number = None
-        duration = None
         username = member.name
         moderator = interaction.author
-        msg: disnake.Message = interaction.target
 
         # INTERVAL
         if interval is None:
@@ -209,10 +206,12 @@ class Moderation(commands.Cog, name="Moderation"):
                          icon_url=interaction.author.avatar)
 
         await adds(embed)
-
         for i in member.roles:
-            await member.remove_roles(i)
-        await member.add_roles(interaction.guild.get_role(Roles.localban))
+            try:
+                await member.remove_roles(i)
+            except:
+                pass
+        await member.add_roles(interaction.guild.get_role(Roles.localban), reason)
 
         if DataBase.localban.count_documents({"_id": member.id}) == 0:
             post = {
@@ -274,7 +273,7 @@ class Moderation(commands.Cog, name="Moderation"):
         await adds(embed)
 
         await member.remove_roles(interaction.guild.get_role(Roles.localban))
-        await member.add_roles(interaction.guild.get_role(Roles.unverify))
+        await member.add_roles(interaction.guild.get_role(Roles.unverify), reason)
 
         if DataBase.localban.count_documents({"_id": member.id}) != 0:
             DataBase.localban.remove_one({"_id": member.id})

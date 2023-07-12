@@ -46,10 +46,10 @@ class GirlButton(disnake.ui.Button):
                               description="")
         await interaction.response.send_message(embed=embed)
         try:
-            mEmbed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
-                                   description="Пожалуйста, оцените его работу ниже по 5-ти балльной шкале\n"
-                                               "Приятного времяпрепровождения на нашем сервере!")
-            await member.send(embed=mEmbed, view=RateView(user=member, validator=interaction.user))
+            m_embed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
+                                    description="Пожалуйста, оцените его работу ниже по 5-ти балльной шкале\n"
+                                                "Приятного времяпрепровождения на нашем сервере!")
+            await member.send(embed=m_embed, view=RateView(user=member, validator=interaction.user))
         except Exception as e:
             print(f"[ERROR] {e}")
 
@@ -89,10 +89,10 @@ class BoyButton(disnake.ui.Button):
                               description="")
         await interaction.response.send_message(embed=embed)
         try:
-            mEmbed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
-                                   description="Пожалуйста, оцените его работу ниже по 5-ти балльной шкале\n"
-                                               "Приятного времяпрепровождения на нашем сервере!")
-            await member.send(embed=mEmbed, view=RateView(user=member, validator=interaction.user))
+            m_embed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
+                                    description="Пожалуйста, оцените его работу ниже по 5-ти балльной шкале\n"
+                                                "Приятного времяпрепровождения на нашем сервере!")
+            await member.send(embed=m_embed, view=RateView(user=member, validator=interaction.user))
         except:
             pass
 
@@ -110,23 +110,13 @@ class RejectButton(disnake.ui.Button):
                                   description="")
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-        verify_chs = [interaction.guild.get_channel(i) for i in Channels.verify]
-        member_in_voice = False
-        for ch in verify_chs:
-            if member in ch.members:
-                member_in_voice = True
-        if not member_in_voice:
-            embed = disnake.Embed(title="Человек не в голосовом канале",
-                                  description="")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
         embed = disnake.Embed(title=f"{member} был(а) недопущен(а) валидатором {interaction.user}",
                               description="")
         await interaction.response.send_message(embed=embed)
         try:
-            mEmbed = disnake.Embed(title=f"Валидатор {interaction.user} недопустил тебя",
-                                   description="Подать заявку на апелляцию ты можешь в канале `『📃』appeal`")
-            await member.send(embed=mEmbed)
+            m_embed = disnake.Embed(title=f"Валидатор {interaction.user} недопустил тебя",
+                                    description="Подать заявку на апелляцию ты можешь в канале `『📃』appeal`")
+            await member.send(embed=m_embed)
         except:
             pass
         unverify = interaction.guild.get_role(Roles.unverify)
@@ -353,19 +343,23 @@ class Verification(commands.Cog, name='Verification'):
 
         'DM_EMBED'
         dm_embed = disnake.Embed(title="Добро пожаловать на HappyServer!",
-                                 description=f"{member.name}, на данный момент вы **не верефицированный** пользователь.\n"
-                                             f"Чтобы пройти верификацию, зайдите в один из каналов `verify`, где к вам подойдёт *Валидатор*.\n"
-                                             f"Так же рекомендуется ознакомиться с {rules_channel.mention} нашего сервера, ведь ***не знание правил не освобождает от ответственности***!")
+                                 description=f"{member.name}, на данный момент вы "
+                                             f"**не верефицированный** пользователь.\n"
+                                             f"Чтобы пройти верификацию, зайдите в один из каналов `verify`, "
+                                             f"где к вам подойдёт *Валидатор*.\n"
+                                             f"Так же рекомендуется ознакомиться с {rules_channel.mention} "
+                                             f"нашего сервера, ведь ***не знание правил не освобождает от "
+                                             f"ответственности***!")
 
         if DataBase.localban.count_documents({"_id": member.id}) == 0:
             try:
                 await member.send(embed=dm_embed)
             except:
                 pass
-            ment = await staff_channel.send(content=f"НОВЫЙ ПОЛЬЗОВАТЕЛЬ {staff.mention}",
-                                            delete_after=0)
-            msg = await staff_channel.send(embed=embed,
-                                           view=VerifyView(user=member))
+            await staff_channel.send(content=f"НОВЫЙ ПОЛЬЗОВАТЕЛЬ {staff.mention}",
+                                     delete_after=0)
+            await staff_channel.send(embed=embed,
+                                     view=VerifyView(user=member))
 
 
 def setup(bot):
