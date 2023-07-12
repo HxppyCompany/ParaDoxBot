@@ -6,6 +6,8 @@ from disnake import Embed
 from disnake.ext import commands
 
 from cogs.variables import Roles
+from cogs.variables import DataBase
+from cogs.variables import System
 
 
 async def ifstaff(interaction, member):
@@ -14,9 +16,9 @@ async def ifstaff(interaction, member):
         embed = Embed(title=f"Нельзя наказать персонал",
                       color=0x2F3136)
         await interaction.send(embed=embed, ephemeral=True)
-        return
+        return True
     else:
-        return
+        return False
 
 
 async def adds(embed):
@@ -64,7 +66,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def mute(self, interaction, member, time=None, reason=None):
 
-        await ifstaff(interaction, member)
+        if await ifstaff(interaction, member):
+            return
 
         # VARIABLES
         interval = None if time.isdigit() else time[-1]
@@ -107,7 +110,7 @@ class Moderation(commands.Cog, name="Moderation"):
         embed.add_field(name=f"ПРИЧИНА",
                         value=f"```{reason}```",
                         inline=True)
-        embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
+        embed.set_footer(text=f"{moderator}",
                          icon_url=interaction.author.avatar)
 
         await adds(embed=embed)
@@ -138,7 +141,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def unmute(self, interaction, member, reason=None):
 
-        await ifstaff(interaction, member)
+        if await ifstaff(interaction, member):
+            return
 
         # VARIABLES
         username = member.name
@@ -148,7 +152,7 @@ class Moderation(commands.Cog, name="Moderation"):
         embed = Embed(title=f"{username} сняли мут",
                       description="",
                       color=0x2F3136)
-        embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
+        embed.set_footer(text=f"{moderator}",
                          icon_url=interaction.author.avatar)
 
         # REASON
@@ -187,7 +191,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def ban(self, interaction, member, reason):
 
-        await ifstaff(interaction, member)
+        if await ifstaff(interaction, member):
+            return
 
         # VARIABLES
         username = member.name
@@ -200,12 +205,25 @@ class Moderation(commands.Cog, name="Moderation"):
         embed.add_field(name=f"ПРИЧИНА",
                         value=f"```{reason}```",
                         inline=True)
-        embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
+        embed.set_footer(text=f"{moderator}",
                          icon_url=interaction.author.avatar)
 
         await adds(embed)
 
+        for i in member.roles:
+            await member.remove_roles(i)
         await member.add_roles(interaction.guild.get_role(Roles.localban))
+
+        if DataBase.localban.count_documents({"_id": member.id}) == 0:
+            post = {
+                "_id": member.id,
+                "name": member.name,
+                "localban": True,
+                "issued_by": interaction.author.id,
+                "timestamp": interaction.created_at.strftime(System.date_format)
+            }
+            DataBase.localban.insert_one(post)
+
         await interaction.send(embed=embed, delete_after=60.0)
 
     '''Unban'''
@@ -231,17 +249,18 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def unban(self, interaction, member, reason=None):
 
-        await ifstaff(interaction, member)
+        if await ifstaff(interaction, member):
+            return
 
         # VARIABLES
         username = member.name
         moderator = interaction.author
 
         # EMBED
-        embed = Embed(title=f"{username} сняли мут",
+        embed = Embed(title=f"{username} сняли бан",
                       description="",
                       color=0x2F3136)
-        embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
+        embed.set_footer(text=f"{moderator}",
                          icon_url=interaction.author.avatar)
 
         # REASON
@@ -255,6 +274,11 @@ class Moderation(commands.Cog, name="Moderation"):
         await adds(embed)
 
         await member.remove_roles(interaction.guild.get_role(Roles.localban))
+        await member.add_roles(interaction.guild.get_role(Roles.unverify))
+
+        if DataBase.localban.count_documents({"_id": member.id}) != 0:
+            DataBase.localban.remove_one({"_id": member.id})
+
         await interaction.send(embed=embed, delete_after=60)
 
     '''Kick'''
@@ -280,7 +304,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def kick(self, interaction, member, reason):
 
-        await ifstaff(interaction, member)
+        if await ifstaff(interaction, member):
+            return
 
         # VARIABLES
         username = member.name
@@ -293,7 +318,7 @@ class Moderation(commands.Cog, name="Moderation"):
         embed.add_field(name=f"ПРИЧИНА",
                         value=f"```{reason}```",
                         inline=True)
-        embed.set_footer(text=f"МОДЕРАТОР: {moderator}",
+        embed.set_footer(text=f"{moderator}",
                          icon_url=interaction.author.avatar)
 
         # PROOF

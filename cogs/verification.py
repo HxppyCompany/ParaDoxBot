@@ -1,21 +1,12 @@
-import json
-import os
-import asyncio
-import subprocess
-
 import disnake
-from disnake.ext import commands, tasks
-from disnake.ext.commands import Bot
-from disnake.ext.commands import has_permissions
+from disnake.ext import commands
 
-import cogs.variables
 from cogs.variables import System
 from cogs.variables import DataBase
 from cogs.variables import Guild
 from cogs.variables import Roles
 from cogs.variables import Staff
 from cogs.variables import Channels
-# from cogs.variables import Templates
 
 '''BUTTONS'''
 
