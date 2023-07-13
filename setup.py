@@ -4,6 +4,7 @@ import platform
 import random
 import sys
 import time
+import traceback
 
 import disnake
 from disnake import Intents
@@ -190,7 +191,8 @@ async def load_cogs() -> None:
                 ext_end = time.time()
                 print(f"[EXT] расширение {extension} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             except Exception as e:
-                exception = f"{type(e).__name__}: {e}."
+                exception = f"{type(e).__name__}: {e}.\n" \
+                            f"{traceback.format_exc()}"
                 print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
 
 

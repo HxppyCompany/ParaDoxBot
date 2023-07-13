@@ -1,5 +1,6 @@
 import datetime
 import random
+import traceback
 
 import disnake
 from disnake import Embed
@@ -65,6 +66,8 @@ class Moderation(commands.Cog, name="Moderation"):
         ]
     )
     async def mute(self, interaction, member, time=None, reason=None):
+
+        await interaction.response.defer(ephemeral=True)
 
         if await ifstaff(interaction, member):
             return
@@ -138,6 +141,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def unmute(self, interaction, member, reason=None):
 
+        await interaction.response.defer(ephemeral=True)
+
         if await ifstaff(interaction, member):
             return
 
@@ -188,6 +193,8 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def ban(self, interaction, member, reason):
 
+        await interaction.response.defer(ephemeral=True)
+
         if await ifstaff(interaction, member):
             return
 
@@ -206,12 +213,18 @@ class Moderation(commands.Cog, name="Moderation"):
                          icon_url=interaction.author.avatar)
 
         await adds(embed)
+
         for i in member.roles:
             try:
-                await member.remove_roles(interaction.guild.get_role(i))
+                await member.remove_roles(i)
             except:
-                pass
-        await member.add_roles(interaction.guild.get_role(Roles.localban), reason)
+                print(f"[ERR] Не удалось удалить роль {i}\n"
+                      f"{traceback.format_exc()}")
+        try:
+            await member.add_roles(interaction.guild.get_role(Roles.localban), reason)
+        except:
+            print(f"[ERR] Не удалось добавить роль {interaction.guild.get_role(Roles.localban)}\n"
+                  f"{traceback.format_exc()}")
 
         if DataBase.localban.count_documents({"_id": member.id}) == 0:
             post = {
@@ -223,7 +236,7 @@ class Moderation(commands.Cog, name="Moderation"):
             }
             DataBase.localban.insert_one(post)
 
-        await interaction.send(embed=embed, delete_after=60.0)
+        await interaction.send(embed=embed, delete_after=60.0, ephemeral=False)
 
     '''Unban'''
 
@@ -247,6 +260,8 @@ class Moderation(commands.Cog, name="Moderation"):
         ]
     )
     async def unban(self, interaction, member, reason=None):
+
+        await interaction.response.defer(ephemeral=True)
 
         if await ifstaff(interaction, member):
             return
@@ -272,11 +287,20 @@ class Moderation(commands.Cog, name="Moderation"):
 
         await adds(embed)
 
-        await member.remove_roles(interaction.guild.get_role(Roles.localban))
-        await member.add_roles(interaction.guild.get_role(Roles.unverify), reason)
+        try:
+            await member.remove_roles(interaction.guild.get_role(Roles.localban), reason)
+        except:
+            print(f"[ERR] Не удалось удалить роль {interaction.guild.get_role(Roles.localban)}\n"
+                  f"{traceback.format_exc()}")
+
+        try:
+            await member.add_roles(interaction.guild.get_role(Roles.unverify), reason)
+        except:
+            print(f"[ERR] Не удалось добавить роль {interaction.guild.get_role(Roles.unverify)}\n"
+                  f"{traceback.format_exc()}")
 
         if DataBase.localban.count_documents({"_id": member.id}) != 0:
-            DataBase.localban.remove_one({"_id": member.id})
+            DataBase.localban.delete_one({"_id": member.id})
 
         await interaction.send(embed=embed, delete_after=60)
 
@@ -302,6 +326,8 @@ class Moderation(commands.Cog, name="Moderation"):
         ]
     )
     async def kick(self, interaction, member, reason):
+
+        await interaction.response.defer(ephemeral=True)
 
         if await ifstaff(interaction, member):
             return
