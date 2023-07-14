@@ -67,7 +67,7 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def mute(self, interaction, member, time=None, reason=None):
 
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
 
         if await ifstaff(interaction, member):
             return
@@ -141,7 +141,7 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def unmute(self, interaction, member, reason=None):
 
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
 
         if await ifstaff(interaction, member):
             return
@@ -193,7 +193,7 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def ban(self, interaction, member, reason):
 
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
 
         if await ifstaff(interaction, member):
             return
@@ -236,7 +236,7 @@ class Moderation(commands.Cog, name="Moderation"):
             }
             DataBase.localban.insert_one(post)
 
-        await interaction.send(embed=embed, delete_after=60.0, ephemeral=False)
+        await interaction.send(embed=embed, delete_after=60.0)
 
     '''Unban'''
 
@@ -261,7 +261,7 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def unban(self, interaction, member, reason=None):
 
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
 
         if await ifstaff(interaction, member):
             return
@@ -327,7 +327,7 @@ class Moderation(commands.Cog, name="Moderation"):
     )
     async def kick(self, interaction, member, reason):
 
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer(ephemeral=False)
 
         if await ifstaff(interaction, member):
             return
