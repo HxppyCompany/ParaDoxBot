@@ -195,22 +195,17 @@ class Other(commands.Cog, name="Other"):
         except:
             pass
 
-        embed2 = disnake.Embed(
-            title="2-ой эмбед",
-            color=0x2F3136
-        )
-
         try:
-            embed2.add_field(
+            embed.add_field(
                 name="Дата приобретения нитро",
-                value=member.premium_since,
+                value=member.premium_since if member.premium_since else "Отсутствует",
                 inline=True
             )
         except:
             pass
 
         try:
-            embed2.add_field(
+            embed.add_field(
                 name="Войс",
                 value=member.voice.channel if member.voice else "Не сидит",
                 inline=True
@@ -220,7 +215,6 @@ class Other(commands.Cog, name="Other"):
 
         embed.set_thumbnail(url=member.avatar)
         await interaction.followup.send(embed=embed)
-        await interaction.followup.send(embed=embed2, ephemeral=True)
 
     @commands.slash_command(
         name="send",
