@@ -213,8 +213,131 @@ class Other(commands.Cog, name="Other"):
         except:
             pass
 
+        embed2 = disnake.Embed(
+            title="2-ой эмбед",
+            color=0x2F3136
+        )
+
+        try:
+            embed2.add_field(
+                name="nick",
+                value=member.nick,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="pending",
+                value=member.pending,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="premium_since",
+                value=member.premium_since,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="public_flags",
+                value=member.public_flags,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="raw_status",
+                value=member.raw_status,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="role_icon",
+                value=member.role_icon,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="roles",
+                value=member.roles,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="status",
+                value=member.status,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="system",
+                value=member.system,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="tag",
+                value=member.tag,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="top_role",
+                value=member.top_role,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="voice",
+                value=member.voice,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed2.add_field(
+                name="web_status",
+                value=member.web_status,
+                inline=True
+            )
+        except:
+            pass
+
         embed.set_thumbnail(url=member.avatar)
         await interaction.followup.send(embed=embed)
+        await interaction.followup.send(embed=embed2)
 
     @commands.slash_command(
         name="send",
