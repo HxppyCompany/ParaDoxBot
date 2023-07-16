@@ -337,7 +337,7 @@ class Other(commands.Cog, name="Other"):
 
         embed.set_thumbnail(url=member.avatar)
         await interaction.followup.send(embed=embed)
-        await interaction.followup.send(embed=embed2)
+        await interaction.followup.send(embed=embed2, ephemeral=True)
 
     @commands.slash_command(
         name="send",
