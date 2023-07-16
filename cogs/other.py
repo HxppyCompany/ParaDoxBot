@@ -170,24 +170,6 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="desktop_status",
-                value=member.desktop_status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="mobile_status",
-                value=member.mobile_status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
                 name="Иконка роли",
                 value=member.role_icon if member.role_icon else "Отсутствует",
                 inline=True
@@ -198,7 +180,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Роли",
-                value=member.roles,
+                value="\n".join([role.mention for role in member.roles[1:]]),
                 inline=True
             )
         except:
@@ -220,25 +202,7 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed2.add_field(
-                name="nick",
-                value=member.nick,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="pending",
-                value=member.pending,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="premium_since",
+                name="Дата приобретения нитро",
                 value=member.premium_since,
                 inline=True
             )
@@ -247,89 +211,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed2.add_field(
-                name="public_flags",
-                value=member.public_flags,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="raw_status",
-                value=member.raw_status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="role_icon",
-                value=member.role_icon,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="roles",
-                value=member.roles,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="status",
-                value=member.status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="system",
-                value=member.system,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="tag",
-                value=member.tag,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="top_role",
-                value=member.top_role,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="voice",
-                value=member.voice,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed2.add_field(
-                name="web_status",
-                value=member.web_status,
+                name="Войс",
+                value=member.voice.channel if member.voice else "Не сидит",
                 inline=True
             )
         except:
