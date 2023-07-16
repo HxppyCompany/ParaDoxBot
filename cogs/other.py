@@ -301,7 +301,7 @@ class Other(commands.Cog, name="Other"):
             disnake.Option(
                 name="image",
                 description="Изображение",
-                type=disnake.OptionType.attachment,
+                type=disnake.OptionType.string,
                 required=False
             ),
             disnake.Option(
@@ -313,7 +313,7 @@ class Other(commands.Cog, name="Other"):
             disnake.Option(
                 name="thumbnail",
                 description="Миниатюра",
-                type=disnake.OptionType.attachment,
+                type=disnake.OptionType.string,
                 required=False
             ),
             disnake.Option(
@@ -337,29 +337,38 @@ class Other(commands.Cog, name="Other"):
             disnake.Option(
                 name="video",
                 description="Видео",
-                type=disnake.OptionType.attachment,
+                type=disnake.OptionType.string,
                 required=False
             )
         ]
     )
-    async def embed(self, interaction, author, colour, description, fields, footer, image, provider, thumbnail,
-                    timestamp, title, url, video):
+    async def embed(self, interaction, author, colour, description, footer, image, provider, thumbnail, timestamp,
+                    title, url, video):
 
         await interaction.response.defer(ephemeral=True)
 
         dict_embed = {
-            "author": author,
-            "colour": colour,
+            "author": {
+                "text": author
+            },
             "description": description,
-            "fields": fields,
-            "footer": footer,
-            "image": image,
+            "color": colour,
+            "footer": {
+                "text": footer
+            },
+            "image": {
+                "url": image
+            },
             "provider": provider,
-            "thumbnail": thumbnail,
+            "thumbnail": {
+                "url": thumbnail
+            },
             "timestamp": timestamp,
             "title": title,
             "url": url,
-            "video": video,
+            "video": {
+                "url": video
+            }
         }
         embed = disnake.Embed.from_dict(dict_embed)
 
