@@ -1,3 +1,5 @@
+import time
+
 import disnake
 from disnake.ext import commands
 
@@ -35,7 +37,7 @@ class Other(commands.Cog, name="Other"):
 
         await interaction.response.defer(ephemeral=True)
 
-        # date_format = "%a, %b %d, %Y"
+        date_format = "%a, %b %d, %Y"
 
         embed = disnake.Embed(
             title=f"Информация о {member}",
@@ -144,7 +146,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата присоединения",
-                value=member.joined_at,
+                value=member.joined_at.strftime(date_format),
                 inline=True
             )
         except:
@@ -153,7 +155,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата регистрации",
-                value=member.created_at,
+                value=member.created_at.strftime("%d.%m.%Y %H:%M:%S"),
                 inline=True
             )
         except:
