@@ -255,11 +255,11 @@ class Other(commands.Cog, name="Other"):
                 name="channel",
                 description="Канал, куда отправить",
                 type=disnake.OptionType.channel,
-                required=False
+                required=True
             )
         ]
     )
-    async def send(self, interaction, message, channel: disnake.TextChannel = disnake.Interaction.channel):
+    async def send(self, interaction, message, channel):
 
         await interaction.response.defer(ephemeral=True)
 
