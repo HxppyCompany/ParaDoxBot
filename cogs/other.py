@@ -266,7 +266,7 @@ class Other(commands.Cog, name="Other"):
         embed = disnake.Embed(title=f"Сообщение отправлено в канал {channel}",
                               color=0x2F3136)
 
-        await channel.send(message=message)
+        await channel.send(message)
         await interaction.response.send_message(embed=embed)
 
     @commands.slash_command(
