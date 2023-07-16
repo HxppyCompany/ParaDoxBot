@@ -259,17 +259,14 @@ class Other(commands.Cog, name="Other"):
             )
         ]
     )
-    async def send(self, interaction, message, channel=None):
+    async def send(self, interaction, message, channel: disnake.TextChannel = disnake.Interaction.channel):
 
         await interaction.response.defer(ephemeral=True)
 
         embed = disnake.Embed(title=f"Сообщение отправлено в канал {channel}",
                               color=0x2F3136)
 
-        if channel is None:
-            channel = self.bot.get_channel(channel)
         await channel.send(message)
-
         await interaction.response.send_message(embed=embed)
 
     @commands.slash_command(
