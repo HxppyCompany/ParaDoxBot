@@ -5,18 +5,19 @@ from disnake.ext import commands
 class Other(commands.Cog, name="Other"):
     def __init__(self, bot):
         self.bot = bot
-        self.BACKUP_DIR = "backup/"
-        self.allowedbots = [1005928067065196645, 411916947773587456, 472911936951156740, 678344927997853742,
-                            1068150044940840961, 669952145352556561, 294882584201003009]
 
     @commands.slash_command(
         name="servers_leave",
         description="Выйти со всех серверов, где есть бот",
         default_member_permissions=disnake.Permissions(administrator=True)
     )
-    async def servers_leave(self):
+    async def servers_leave(self, interaction):
+
+        await interaction.response.defer(ephemeral=True)
+
         for guild in self.bot.guilds:
-            await guild.leave()
+            if guild != interaction.guild:
+                await guild.leave()
 
     @commands.slash_command(
         name="userinfo",
@@ -258,8 +259,15 @@ class Other(commands.Cog, name="Other"):
             )
         ]
     )
-    async def send(self, message, channel=disnake.Interaction.channel):
+    async def send(self, interaction, message, channel=disnake.Interaction.channel):
+
+        await interaction.response.defer(ephemeral=True)
+
+        embed = disnake.Embed(title=f"Сообщение отправлено в канал {channel}",
+                              color=0x2F3136)
+
         await channel.send(message=message)
+        await interaction.response.send_message(embed=embed)
 
     @commands.slash_command(
         name="embed",
@@ -336,6 +344,9 @@ class Other(commands.Cog, name="Other"):
     )
     async def embed(self, interaction, author, colour, description, fields, footer, image, provider, thumbnail,
                     timestamp, title, url, video):
+
+        await interaction.response.defer(ephemeral=True)
+
         dict_embed = {
             "author": author,
             "colour": colour,
@@ -351,16 +362,21 @@ class Other(commands.Cog, name="Other"):
             "video": video,
         }
         embed = disnake.Embed.from_dict(dict_embed)
+
         await interaction.channel.send(embed=embed)
 
     @commands.slash_command(
         name="ping",
         description="Пинг"
     )
-    async def ping(self, ctx):
+    async def ping(self, interaction):
+
+        await interaction.response.defer(ephemeral=True)
+
         embed = disnake.Embed(title=f'Мой пинг: {self.bot.latency * 1000:.2f}мс!',
                               color=0x2F3136)
-        await ctx.send(embed=embed, delete_after=10.0)
+
+        await interaction.response.send_message(embed=embed)
 
 
 def setup(bot):
