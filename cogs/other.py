@@ -44,8 +44,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="accent_color|accent_colour",
-                value=member.accent_color,
+                name="Имя",
+                value=member.name,
                 inline=True
             )
         except:
@@ -53,8 +53,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="activities",
-                value=member.activities,
+                name="Отображаемое имя",
+                value=member.display_name if member.display_name != member.name else "Отсутствует",
                 inline=True
             )
         except:
@@ -62,8 +62,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="activity",
-                value=member.activity,
+                name="Упоминание",
+                value=member.mention,
                 inline=True
             )
         except:
@@ -71,8 +71,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="avatar",
-                value=member.avatar,
+                name="Статус",
+                value=member.status,
                 inline=True
             )
         except:
@@ -80,8 +80,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="banner",
-                value=member.banner,
+                name="Статус",
+                value=member.activity if member.activity else "Отсутствует",
                 inline=True
             )
         except:
@@ -89,8 +89,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="bot",
-                value=member.bot,
+                name="Аватарка",
+                value=member.avatar if member.avatar else "Отсутствует",
                 inline=True
             )
         except:
@@ -98,8 +98,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="color|colour",
-                value=member.color,
+                name="Отображаемая аватарка",
+                value=member.display_avatar if member.display_avatar else "Отсутствует",
                 inline=True
             )
         except:
@@ -107,7 +107,52 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="created_at",
+                name="Стандартная аватарка",
+                value=member.default_avatar,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed.add_field(
+                name="Баннер",
+                value=member.banner if member.banner else "Отсутствует",
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed.add_field(
+                name="Бот",
+                value="Да" if member.bot else "Нет",
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed.add_field(
+                name="Цвет",
+                value=member.color if member.color else "Отсутствует",
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed.add_field(
+                name="Дата присоединения",
+                value=member.joined_at,
+                inline=True
+            )
+        except:
+            pass
+
+        try:
+            embed.add_field(
+                name="Дата регистрации",
                 value=member.created_at,
                 inline=True
             )
@@ -116,17 +161,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="current_timeout",
-                value=member.current_timeout,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="default_avatar",
-                value=member.default_avatar,
+                name="Таймаут",
+                value=member.current_timeout if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:
@@ -143,114 +179,6 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="discriminator",
-                value=member.discriminator,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="display_avatar",
-                value=member.display_avatar,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="display_name",
-                value=member.display_name,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="dm_channel",
-                value=member.dm_channel,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="flags",
-                value=member.flags,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="global_name",
-                value=member.global_name,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="guild",
-                value=member.guild,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="guild_avatar",
-                value=member.guild_avatar,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="guild_permissions",
-                value=member.guild_permissions,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="id",
-                value=member.id,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="joined_at",
-                value=member.joined_at,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="mention",
-                value=member.mention,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
                 name="mobile_status",
                 value=member.mobile_status,
                 inline=True
@@ -260,8 +188,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="mutual_guilds",
-                value=member.mutual_guilds,
+                name="Иконка роли",
+                value=member.role_icon if member.role_icon else "Отсутствует",
                 inline=True
             )
         except:
@@ -269,70 +197,7 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="name",
-                value=member.name,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="nick",
-                value=member.nick,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="pending",
-                value=member.pending,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="premium_since",
-                value=member.premium_since,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="public_flags",
-                value=member.public_flags,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="raw_status",
-                value=member.raw_status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="role_icon",
-                value=member.role_icon,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="roles",
+                name="Роли",
                 value=member.roles,
                 inline=True
             )
@@ -341,53 +206,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="status",
-                value=member.status,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="system",
-                value=member.system,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="tag",
-                value=member.tag,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="top_role",
-                value=member.top_role,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="voice",
-                value=member.voice,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="web_status",
-                value=member.web_status,
+                name="ID",
+                value=member.id,
                 inline=True
             )
         except:
