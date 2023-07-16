@@ -180,7 +180,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Роли",
-                value="\n".join([role.mention for role in member.roles[1:]]),
+                value="\n".join([role.mention for role in member.roles[:0:-1]]),
                 inline=True
             )
         except:
