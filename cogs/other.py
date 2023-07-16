@@ -393,9 +393,8 @@ class Other(commands.Cog, name="Other"):
         except:
             pass
 
-
         embed.set_thumbnail(url=member.avatar)
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send(embed=embed)
 
     @commands.slash_command(
         name="send",
@@ -425,7 +424,7 @@ class Other(commands.Cog, name="Other"):
 
         await channel.send(message)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send(embed=embed)
 
     @commands.slash_command(
         name="ping",
@@ -438,7 +437,7 @@ class Other(commands.Cog, name="Other"):
         embed = disnake.Embed(title=f'Мой пинг: {self.bot.latency * 1000:.2f}мс!',
                               color=0x2F3136)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send(embed=embed)
 
 
 def setup(bot):
