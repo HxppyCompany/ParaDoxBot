@@ -54,10 +54,10 @@ class Other(commands.Cog, name="Other"):
         )
         embed.set_footer(
             text=member.display_name,
-            icon_url=member.display_avatar.url
+            icon_url=member.display_avatar
         )
         embed.set_image(
-            url=member.banner.url
+            url=member.banner
         )
 
         try:
