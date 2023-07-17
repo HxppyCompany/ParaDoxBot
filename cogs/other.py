@@ -43,18 +43,18 @@ class Other(commands.Cog, name="Other"):
         )
 
         embed.set_author(
-            name=f"Информация о {member.mention}",
+            name=f"Информация о {member.display_name}",
             icon_url=Images.online if member.status == disnake.Status.online
             else Images.do_not_disturb if member.status == disnake.Status.do_not_disturb
             else Images.idle if member.status == disnake.Status.idle
             else Images.offline,
         )
         embed.set_thumbnail(
-            url=member.avatar
+            url=member.display_avatar
         )
         embed.set_footer(
-            text=member.display_name,
-            icon_url=member.display_avatar
+            text=member.name,
+            icon_url=member.avatar
         )
         embed.set_image(
             url=member.banner
