@@ -1,3 +1,4 @@
+import datetime
 import traceback
 
 import disnake
@@ -147,7 +148,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата присоединения",
-                value=System.get_time(self, current_time=member.joined_at),
+                value=member.joined_at.astimezone(datetime.timezone(datetime.timedelta(hours=3))).strftime("%H:%M, %b %d, %Y"),
                 inline=True
             )
         except:
