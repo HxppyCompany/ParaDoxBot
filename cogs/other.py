@@ -62,15 +62,6 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="Имя",
-                value=member.name,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
                 name="Статус",
                 value=member.activity if member.activity else "Отсутствует",
                 inline=True
