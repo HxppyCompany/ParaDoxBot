@@ -40,9 +40,11 @@ class Other(commands.Cog, name="Other"):
             )
         ]
     )
-    async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.author, detailed: bool = False):
+    async def userinfo(self, interaction, member: disnake.Member = None, detailed: bool = False):
 
         await interaction.response.defer(ephemeral=True)
+
+        member = member or interaction.author
 
         embed = disnake.Embed(
             color=0x2f3136
