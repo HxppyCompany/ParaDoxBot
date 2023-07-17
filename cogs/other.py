@@ -31,10 +31,16 @@ class Other(commands.Cog, name="Other"):
                 description="Пользователь, чью информацию необходимо получить",
                 type=disnake.OptionType.user,
                 required=False
+            ),
+            disnake.Option(
+                name="detailed",
+                description="Хотите ли вы получить подробную информацию?",
+                type=disnake.OptionType.boolean,
+                required=False
             )
         ]
     )
-    async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.user):
+    async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.user, detailed: bool = False):
 
         await interaction.response.defer(ephemeral=True)
 
@@ -43,7 +49,7 @@ class Other(commands.Cog, name="Other"):
         )
 
         embed.set_author(
-            name=f"Информация о {member.display_name}",
+            name=f"Информация о {member.display_name}{' (БОТ)' if member.bot else ''}",
             icon_url=Images.online if member.status == disnake.Status.online
             else Images.do_not_disturb if member.status == disnake.Status.do_not_disturb
             else Images.idle if member.status == disnake.Status.idle
@@ -60,112 +66,77 @@ class Other(commands.Cog, name="Other"):
             url=member.banner if member.banner else Images.line
         )
 
-        try:
-            embed.add_field(
-                name="Статус",
-                value=member.activity if member.activity else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
+        embed.add_field(
+            name="Статус",
+            value=member.activity if member.activity else "Отсутствует",
+            inline=True
+        )
 
-        try:
-            embed.add_field(
-                name="Стандартная аватарка",
-                value=member.default_avatar,
-                inline=True
-            )
-        except:
-            pass
+        embed.add_field(
+            name="Присоединился",
+            value=await System.get_time(
+                current_time=member.joined_at
+            ),
+            inline=True
+        )
 
-        try:
-            embed.add_field(
-                name="Бот",
-                value="Да" if member.bot else "Нет",
-                inline=True
-            )
-        except:
-            pass
+        embed.add_field(
+            name="Зарегистрировался",
+            value=await System.get_time(
+                current_time=member.created_at
+            ),
+            inline=True
+        )
 
-        try:
+        embed.add_field(
+            name="Роли",
+            value=", ".join(
+                [role.mention for role in member.roles[:0:-1]]
+            ),
+            inline=True
+        )
+
+        if detailed:
             embed.add_field(
                 name="Цвет",
                 value=member.color if member.color else "Отсутствует",
                 inline=True
             )
-        except:
-            pass
 
-        try:
+            if member.current_timeout:
+                embed.add_field(
+                    name="Таймаут",
+                    value=await System.get_time(
+                        current_time=member.current_timeout
+                    ),
+                    inline=True
+                )
+
+            if member.role_icon:
+                embed.add_field(
+                    name="Иконка",
+                    value=member.role_icon,
+                    inline=True
+                )
+
+            if member.voice:
+                embed.add_field(
+                    name="Текущий канал",
+                    value=member.voice.channel.mention,
+                    inline=True
+                )
+
             embed.add_field(
-                name="Присоединился",
-                value=await System.get_time(
-                    current_time=member.joined_at
-                ),
+                name="Стандартная аватарка",
+                value=member.default_avatar,
                 inline=True
             )
-        except:
-            pass
 
-        try:
-            embed.add_field(
-                name="Зарегистрировался",
-                value=await System.get_time(
-                    current_time=member.created_at
-                ),
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Таймаут",
-                value=await System.get_time(
-                    current_time=member.current_timeout
-                ) if member.current_timeout else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Иконка",
-                value=member.role_icon if member.role_icon else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Роли",
-                value="\n".join(
-                    [role.mention for role in member.roles[:0:-1]]
-                ),
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="ID",
-                value=member.id,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Текущий канал",
-                value=member.voice.channel if member.voice else "Не сидит",
-                inline=True
-            )
-        except:
-            pass
+        embed.add_field(
+            name="ID",
+            value=member.id,
+            inline=True
+        )
 
         await interaction.followup.send(embed=embed)
 
