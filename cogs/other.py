@@ -144,7 +144,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата присоединения",
-                value=member.joined_at.strftime(System.date_format),
+                value=System.get_time(current_time=member.joined_at),
                 inline=True
             )
         except:
@@ -153,7 +153,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата регистрации",
-                value=member.created_at.strftime(System.date_format),
+                value=System.get_time(current_time=member.created_at),
                 inline=True
             )
         except:
@@ -162,7 +162,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Таймаут",
-                value=member.current_timeout.strftime(System.date_format) if member.current_timeout else "Отсутствует",
+                value=System.get_time(current_time=member.current_timeout) if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:

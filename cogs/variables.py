@@ -10,8 +10,8 @@ with open("config.json") as file:
 
 
 class System(commands.Cog):
-    date_format = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=3))).\
-        strftime("%H:%M, %b %d, %Y")
+    async def get_time(self, current_time):
+        return current_time.astimezone(datetime.timezone(datetime.timedelta(hours=3))).strftime("%H:%M, %b %d, %Y")
 
 
 class DataBase(commands.Cog):
