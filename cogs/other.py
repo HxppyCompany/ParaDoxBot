@@ -1,3 +1,5 @@
+import traceback
+
 import disnake
 from disnake.ext import commands
 
@@ -148,7 +150,7 @@ class Other(commands.Cog, name="Other"):
                 inline=True
             )
         except:
-            pass
+            print(traceback.format_exc())
 
         try:
             embed.add_field(
@@ -157,7 +159,7 @@ class Other(commands.Cog, name="Other"):
                 inline=True
             )
         except:
-            pass
+            print(traceback.format_exc())
 
         try:
             embed.add_field(
@@ -166,7 +168,7 @@ class Other(commands.Cog, name="Other"):
                 inline=True
             )
         except:
-            pass
+            print(traceback.format_exc())
 
         try:
             embed.add_field(
