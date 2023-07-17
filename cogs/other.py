@@ -37,7 +37,7 @@ class Other(commands.Cog, name="Other"):
 
         await interaction.response.defer(ephemeral=True)
 
-        date_format = "%a, %b %d, %Y"
+        date_format = "%H:%M, %b %d, %Y"
 
         embed = disnake.Embed(
             title=f"Информация о {member}",
@@ -110,7 +110,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Стандартная аватарка",
-                value=member.default_avatar,
+                value=member.default_avatar.key,
                 inline=True
             )
         except:
@@ -155,7 +155,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата регистрации",
-                value=member.created_at.strftime("%d.%m.%Y %H:%M:%S"),
+                value=member.created_at.strftime(date_format),
                 inline=True
             )
         except:
@@ -164,7 +164,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Таймаут",
-                value=member.current_timeout if member.current_timeout else "Отсутствует",
+                value=member.current_timeout.strftime(date_format) if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:
@@ -199,16 +199,7 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="Дата приобретения нитро",
-                value=member.premium_since if member.premium_since else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Войс",
+                name="Текущий канал",
                 value=member.voice.channel if member.voice else "Не сидит",
                 inline=True
             )
