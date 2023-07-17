@@ -92,7 +92,7 @@ class Other(commands.Cog, name="Other"):
 
         embed.add_field(
             name="Роли",
-            value=", ".join(
+            value="\n".join(
                 [role.mention for role in member.roles[:0:-1]]
             ),
             inline=True
