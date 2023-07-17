@@ -1,7 +1,7 @@
 import disnake
 from disnake.ext import commands
 
-from variables import System
+from cogs.variables import System
 
 
 class Other(commands.Cog, name="Other"):
