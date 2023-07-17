@@ -40,7 +40,7 @@ class Other(commands.Cog, name="Other"):
             )
         ]
     )
-    async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.user, detailed: bool = False):
+    async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.author, detailed: bool = False):
 
         await interaction.response.defer(ephemeral=True)
 
