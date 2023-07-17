@@ -58,6 +58,7 @@ class Images(commands.Cog):
     offline = "https://happycompany.hb.ru-msk.vkcs.cloud/offline.png"
     idle = "https://happycompany.hb.ru-msk.vkcs.cloud/idle.png"
     do_not_disturb = "https://happycompany.hb.ru-msk.vkcs.cloud/dnd.png"
+    line = "https://happycompany.hb.ru-msk.vkcs.cloud/line.png"
 
 
 def setup(bot):

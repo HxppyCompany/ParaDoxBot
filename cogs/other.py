@@ -57,7 +57,7 @@ class Other(commands.Cog, name="Other"):
             icon_url=member.avatar
         )
         embed.set_image(
-            url=member.banner
+            url=member.banner if member.banner else Images.line
         )
 
         try:
