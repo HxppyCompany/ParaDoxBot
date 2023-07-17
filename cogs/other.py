@@ -1,11 +1,8 @@
-import datetime
-import traceback
-
 import disnake
 from disnake.ext import commands
 
-import cogs.variables
 from cogs.variables import System
+from cogs.variables import Images
 
 
 class Other(commands.Cog, name="Other"):
@@ -42,41 +39,31 @@ class Other(commands.Cog, name="Other"):
         await interaction.response.defer(ephemeral=True)
 
         embed = disnake.Embed(
-            title=f"Информация о {member}",
             color=0x2f3136
+        )
+
+        embed.set_author(
+            name=f"Информация о {member.mention}",
+            icon_url=Images.online if member.status == disnake.Status.online
+            else Images.do_not_disturb if member.status == disnake.Status.do_not_disturb
+            else Images.idle if member.status == disnake.Status.idle
+            else Images.offline,
+        )
+        embed.set_thumbnail(
+            url=member.avatar
+        )
+        embed.set_footer(
+            text=member.display_name,
+            icon_url=member.display_avatar.url
+        )
+        embed.set_image(
+            url=member.banner.url
         )
 
         try:
             embed.add_field(
                 name="Имя",
                 value=member.name,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Отображаемое имя",
-                value=member.display_name if member.display_name != member.name else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Упоминание",
-                value=member.mention,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Статус",
-                value=member.status,
                 inline=True
             )
         except:
@@ -93,35 +80,8 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="Аватарка",
-                value=member.avatar if member.avatar else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Отображаемая аватарка",
-                value=member.display_avatar if member.display_avatar else "Отсутствует",
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
                 name="Стандартная аватарка",
-                value=member.default_avatar.key,
-                inline=True
-            )
-        except:
-            pass
-
-        try:
-            embed.add_field(
-                name="Баннер",
-                value=member.banner if member.banner else "Отсутствует",
+                value=member.default_avatar,
                 inline=True
             )
         except:
@@ -147,34 +107,40 @@ class Other(commands.Cog, name="Other"):
 
         try:
             embed.add_field(
-                name="Дата присоединения",
-                value=member.joined_at.astimezone(datetime.timezone(datetime.timedelta(hours=3))).strftime("%H:%M, %b %d, %Y"),
+                name="Присоединился",
+                value=await System.get_time(
+                    current_time=member.joined_at
+                ),
                 inline=True
             )
         except:
-            print(traceback.format_exc())
+            pass
 
         try:
             embed.add_field(
-                name="Дата регистрации",
-                value=System.get_time(self, current_time=member.created_at),
+                name="Зарегистрировался",
+                value=await System.get_time(
+                    current_time=member.created_at
+                ),
                 inline=True
             )
         except:
-            print(traceback.format_exc())
+            pass
 
         try:
             embed.add_field(
                 name="Таймаут",
-                value=System.get_time(self, current_time=member.current_timeout) if member.current_timeout else "Отсутствует",
+                value=await System.get_time(
+                    current_time=member.current_timeout
+                ) if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:
-            print(traceback.format_exc())
+            pass
 
         try:
             embed.add_field(
-                name="Иконка роли",
+                name="Иконка",
                 value=member.role_icon if member.role_icon else "Отсутствует",
                 inline=True
             )
@@ -184,7 +150,9 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Роли",
-                value="\n".join([role.mention for role in member.roles[:0:-1]]),
+                value="\n".join(
+                    [role.mention for role in member.roles[:0:-1]]
+                ),
                 inline=True
             )
         except:
@@ -208,7 +176,6 @@ class Other(commands.Cog, name="Other"):
         except:
             pass
 
-        embed.set_thumbnail(url=member.avatar)
         await interaction.followup.send(embed=embed)
 
     @commands.slash_command(

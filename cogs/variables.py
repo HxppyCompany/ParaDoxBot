@@ -10,7 +10,8 @@ with open("config.json") as file:
 
 
 class System(commands.Cog):
-    async def get_time(self, current_time):
+    @staticmethod
+    async def get_time(current_time):
         return current_time.astimezone(datetime.timezone(datetime.timedelta(hours=3))).strftime("%H:%M, %b %d, %Y")
 
 
@@ -52,7 +53,11 @@ class Channels(commands.Cog):
     }
 
 
-# class Templates(commands.Cog):
+class Images(commands.Cog):
+    online = "https://happycompany.hb.ru-msk.vkcs.cloud/online.png"
+    offline = "https://happycompany.hb.ru-msk.vkcs.cloud/offline.png"
+    idle = "https://happycompany.hb.ru-msk.vkcs.cloud/idle.png"
+    do_not_disturb = "https://happycompany.hb.ru-msk.vkcs.cloud/dnd.png"
 
 
 def setup(bot):
