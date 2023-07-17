@@ -3,6 +3,7 @@ import traceback
 import disnake
 from disnake.ext import commands
 
+import cogs.variables
 from cogs.variables import System
 
 
@@ -146,7 +147,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата присоединения",
-                value=System.get_time(current_time=member.joined_at),
+                value=System.get_time(self, current_time=member.joined_at),
                 inline=True
             )
         except:
@@ -155,7 +156,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата регистрации",
-                value=System.get_time(current_time=member.created_at),
+                value=System.get_time(self, current_time=member.created_at),
                 inline=True
             )
         except:
@@ -164,7 +165,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Таймаут",
-                value=System.get_time(current_time=member.current_timeout) if member.current_timeout else "Отсутствует",
+                value=System.get_time(self, current_time=member.current_timeout) if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:
