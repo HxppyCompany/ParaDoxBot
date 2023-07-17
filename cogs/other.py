@@ -1,7 +1,7 @@
-import time
-
 import disnake
 from disnake.ext import commands
+
+from variables import System
 
 
 class Other(commands.Cog, name="Other"):
@@ -36,8 +36,6 @@ class Other(commands.Cog, name="Other"):
     async def userinfo(self, interaction, member: disnake.Member = disnake.Interaction.user):
 
         await interaction.response.defer(ephemeral=True)
-
-        date_format = "%H:%M, %b %d, %Y"
 
         embed = disnake.Embed(
             title=f"Информация о {member}",
@@ -146,7 +144,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата присоединения",
-                value=member.joined_at.strftime(date_format),
+                value=member.joined_at.strftime(System.date_format),
                 inline=True
             )
         except:
@@ -155,7 +153,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Дата регистрации",
-                value=member.created_at.strftime(date_format),
+                value=member.created_at.strftime(System.date_format),
                 inline=True
             )
         except:
@@ -164,7 +162,7 @@ class Other(commands.Cog, name="Other"):
         try:
             embed.add_field(
                 name="Таймаут",
-                value=member.current_timeout.strftime(date_format) if member.current_timeout else "Отсутствует",
+                value=member.current_timeout.strftime(System.date_format) if member.current_timeout else "Отсутствует",
                 inline=True
             )
         except:

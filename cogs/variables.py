@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from disnake.ext import commands
 
@@ -9,7 +10,8 @@ with open("config.json") as file:
 
 
 class System(commands.Cog):
-    date_format = "%b %d, %Y"
+    date_format = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=3))).\
+        strftime("%H:%M, %b %d, %Y")
 
 
 class DataBase(commands.Cog):
