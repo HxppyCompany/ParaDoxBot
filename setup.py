@@ -22,9 +22,6 @@ else:
 database = MongoClient(config["mongodb"])
 
 intents = Intents.all()
-intents.members = True
-intents.message_content = True
-
 bot = Bot(
     command_prefix=commands.when_mentioned_or(config["prefix"]),
     intents=intents)
@@ -91,11 +88,24 @@ async def status_task() -> None:
     await bot.change_presence(activity=disnake.Game(random.choice(statuses)))
 
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def reload(ctx, name):
-    if ctx.author.id in config["owners"]:
-        await ctx.message.delete()
+@bot.slash_command(
+    name="reload",
+    description="Разгружает расширения",
+    default_member_permissions=disnake.Permissions(administrator=True),
+    options=[
+        disnake.Option(
+            name="name",
+            description="Название расширения",
+            type=disnake.OptionType.string,
+            required=True
+        )
+    ]
+)
+async def reload(interaction, name):
+    ext_start = 0
+
+    await interaction.response.defer(ephemeral=True)
+    if interaction.author.id in config["owners"]:
         if name == "all":
             for filename in os.listdir(f"./cogs"):
                 if filename.endswith(".py"):
@@ -106,20 +116,21 @@ async def reload(ctx, name):
                     except Exception as e:
                         exception = f"{type(e).__name__}: {e}."
                         print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+
                     try:
                         bot.load_extension(f"cogs.{extension}")
                         ext_end = time.time()
                         print(
-                            f"[EXT] расширение {extension} успешно перезагружено ({(ext_end-ext_start)*1000:.2f}мс)")
+                            f"[EXT] расширение {extension} успешно перезагружено ({(ext_end - ext_start) * 1000:.2f}мс)")
                         embed = disnake.Embed(title=f"Расширение {extension} перезагружено",
                                               description="")
-                        await ctx.send(embed=embed, delete_after=10.0)
+                        await interaction.send(embed=embed, delete_after=10.0)
                     except Exception as e:
                         exception = f"{type(e).__name__}: {e}."
                         print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
-                        embed = disnake.Embed(title=f"Расширение {extension} неу далось перезагрузить",
+                        embed = disnake.Embed(title=f"Расширение {extension} не удалось перезагрузить",
                                               description=f"{exception}")
-                        await ctx.send(embed=embed, delete_after=10.0)
+                        await interaction.followup.send(embed=embed)
         else:
             try:
                 ext_start = time.time()
@@ -127,26 +138,38 @@ async def reload(ctx, name):
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}."
                 print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+
             try:
                 bot.load_extension(f"cogs.{name}")
                 ext_end = time.time()
                 print(f"[EXT] расширение {name} успешно перезагружено ({(ext_end - ext_start) * 1000:.2f}мс)")
                 embed = disnake.Embed(title=f"Расширение {name} перезагружено",
                                       description="")
-                await ctx.send(embed=embed, delete_after=10.0)
+                await interaction.followup.send(embed=embed)
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}."
                 print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
                 embed = disnake.Embed(title=f"Расширение {name} не удалось перезагрузить",
                                       description=f"{exception}")
-                await ctx.send(embed=embed, delete_after=10.0)
+                await interaction.followup.send(embed=embed)
 
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def load(ctx, name):
-    if ctx.author.id in config["owners"]:
-        await ctx.message.delete()
+@bot.slash_command(
+    name="load",
+    description="Загружает расширения",
+    default_member_permissions=disnake.Permissions(administrator=True),
+    options=[
+        disnake.Option(
+            name="name",
+            description="Название расширения",
+            type=disnake.OptionType.string,
+            required=True
+        )
+    ]
+)
+async def load(interaction, name):
+    await interaction.response.defer(ephemeral=True)
+    if interaction.author.id in config["owners"]:
         try:
             ext_start = time.time()
             bot.load_extension(f"cogs.{name}")
@@ -154,20 +177,32 @@ async def load(ctx, name):
             print(f"[EXT] расширение {name} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             embed = disnake.Embed(title=f"Расширение {name} загружено",
                                   description="")
-            await ctx.send(embed=embed, delete_after=10.0)
+            await interaction.followup.send(embed=embed)
         except Exception as e:
             exception = f"{type(e).__name__}: {e}."
             print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
             embed = disnake.Embed(title=f"Расширение {name} не удалось загрузить",
                                   description=f"{exception}")
-            await ctx.send(embed=embed, delete_after=10.0)
+            await interaction.followup.send(embed=embed)
 
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def unload(ctx, name):
-    if ctx.author.id in config["owners"]:
-        await ctx.message.delete()
+@bot.slash_command(
+    name="unload",
+    description="Выгружает расширения",
+    default_member_permissions=disnake.Permissions(administrator=True),
+    options=[
+        disnake.Option(
+            name="name",
+            description="Название расширения",
+            type=disnake.OptionType.string,
+            required=True
+        )
+    ]
+)
+async def unload(interaction, name):
+    await interaction.response.defer(ephemeral=True)
+    if interaction.author.id in config["owners"]:
+        await interaction.message.delete()
         try:
             ext_start = time.time()
             bot.unload_extension(f"cogs.{name}")
@@ -175,10 +210,13 @@ async def unload(ctx, name):
             print(f"[EXT] расширение {name} успешно выгружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             embed = disnake.Embed(title=f"Расширение {name} выгружено",
                                   description="")
-            await ctx.send(embed=embed, delete_after=10.0)
+            await interaction.followup.send(embed=embed)
         except Exception as e:
             exception = f"{type(e).__name__}: {e}."
             print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+            embed = disnake.Embed(title=f"Расширение {name} не удалось загрузить",
+                                  description=f"{exception}")
+            await interaction.followup.send(embed=embed)
 
 
 async def load_cogs() -> None:
@@ -191,8 +229,8 @@ async def load_cogs() -> None:
                 ext_end = time.time()
                 print(f"[EXT] расширение {extension} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             except Exception as e:
-                exception = f"{type(e).__name__}: {e}.\n" \
-                            f"{traceback.format_exc()}"
+                exception = (f"{type(e).__name__}: {e}.\n"
+                             f"{traceback.format_exc()}")
                 print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
 
 
