@@ -27,11 +27,11 @@ async def adds(embed):
     if add == 1:
         embed.set_author(name="Приобрести рекламу в боте можно у HappyFan",
                          url="",
-                         icon_url="")
+                         icon_url="https://happycompany.hb.ru-msk.vkcs.cloud/Server%20Gif%20Icon.GIF")
     if add == 2:
-        embed.set_author(name="Здесь могла быть ваша реклама",
-                         url="",
-                         icon_url="")
+        embed.set_author(name="Создан при поддержке LunarHost (кликабельно)",
+                         url="https://discord.gg/9nK6DKj3Ra",
+                         icon_url="https://happycompany.hb.ru-msk.vkcs.cloud/lunarhost.png")
 
 
 class Moderation(commands.Cog, name="Moderation"):
