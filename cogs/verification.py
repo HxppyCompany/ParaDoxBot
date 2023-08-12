@@ -310,6 +310,12 @@ class Verification(commands.Cog, name='Verification'):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: disnake.Member):
+        if member.bot:
+            try:
+                bot = member.guild.get_role(Roles.bot)
+                return await member.add_roles(bot)
+            except:
+                pass
         rules_channel = self.bot.get_channel(1054280833361514589)
         staff_channel = self.bot.get_channel(Channels.verification)
         staff = member.guild.get_role(Staff.validator)

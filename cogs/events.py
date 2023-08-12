@@ -8,13 +8,13 @@ class Events(commands.Cog, name="Events"):
     def __init__(self, bot):
         self.bot = bot
         self.allowedbots = [1005928067065196645, 411916947773587456, 472911936951156740, 678344927997853742,
-                            1068150044940840961, 669952145352556561, 294882584201003009]
+                            1068150044940840961, 669952145352556561, 294882584201003009, 1133374299412107405]
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot:
             if member.id not in self.allowedbots:
-                await member.ban(member, reason="Добавлять ботов на сервер запрещено")
+                await member.ban(reason="Добавлять ботов на сервер запрещено")
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
