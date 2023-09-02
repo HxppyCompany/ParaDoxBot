@@ -96,20 +96,20 @@ class Vacancies(commands.Cog, name="Vacancies"):
         self.bot = bot
         self.persistents_view_added = False
 
-    # @commands.slash_command(
-    #     name="vacancies",
-    #     description="",
-    #     default_member_permissions=disnake.Permissions(administrator=True)
-    # )
-    @commands.command()
-    async def vacancies(self, ctx):
+    @commands.slash_command(
+        name="vacancies",
+        description="",
+        default_member_permissions=disnake.Permissions(administrator=True)
+    )
+    async def vacancies(self, interaction):
+        await interaction.response.defer(ephemeral=True)
         embed = disnake.Embed(title="Доступные вакансии в staff",
                               description="Выбери одну из них ниже и заполни указанную форму!")
 
         view = disnake.ui.View()
         view.add_item(SelectVacancies())
 
-        await ctx.send(embed=embed, view=view)
+        await interaction.followup.send(embed=embed, view=view)
 
     @commands.Cog.listener()
     async def on_connection(self):

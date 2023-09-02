@@ -22,9 +22,7 @@ else:
 database = MongoClient(config["mongodb"])
 
 intents = Intents.all()
-bot = Bot(
-    command_prefix=commands.when_mentioned_or(config["prefix"]),
-    intents=intents)
+bot = Bot(intents=intents)
 bot.config = config
 
 

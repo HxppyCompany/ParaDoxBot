@@ -22,6 +22,7 @@ class Commands(commands.Cog, name="Commands"):
         default_member_permissions=disnake.Permissions(manage_messages=True)
     )
     async def clear(self, interaction, amount: int):
+        await interaction.response.defer(ephemeral=True)
         if int(amount) <= 100:
             purge = await interaction.channel.purge(limit=int(amount), bulk=True)
             embed = disnake.Embed(title=f"Удалено {len(purge)} сообщений",
@@ -31,7 +32,7 @@ class Commands(commands.Cog, name="Commands"):
             embed = disnake.Embed(title="Удалено 100 сообщений",
                                   description="")
             embed.set_footer(text="больше 100 сообщений удалить нельзя")
-        await interaction.send(embed=embed, delete_after=10.0)
+        await interaction.followup.send(embed=embed)
 
     @commands.slash_command(
         name="slowmode",
@@ -47,10 +48,11 @@ class Commands(commands.Cog, name="Commands"):
         default_member_permissions=disnake.Permissions(manage_channels=True)
     )
     async def slowmode(self, interaction, seconds: int):
+        await interaction.response.defer(ephemeral=True)
         await interaction.channel.edit(slowmode_delay=seconds)
         embed = disnake.Embed(title=f"Медленный режим `{seconds}с` был поставлен для этого канала",
                               description="")
-        await interaction.send(embed=embed, delete_after=300.0)
+        await interaction.followup.send(embed=embed)
 
     @commands.slash_command(
         name="lock",
@@ -66,16 +68,17 @@ class Commands(commands.Cog, name="Commands"):
         default_member_permissions=disnake.Permissions(manage_channels=True)
     )
     async def lock(self, interaction, reason=None):
+        await interaction.response.defer(ephemeral=False)
         embed = disnake.Embed(title=f"Канал был закрыт",
                               description="")
         if reason is not None:
             embed.add_field(name=f"> По причине: {reason}",
                             value="** **",
                             inline=True)
-        await interaction.channel.send(embed=embed, delete_after=300.0)
         overwrite = interaction.channel.overwrites_for(self, interaction.guild.default_role)
         overwrite.send_messages = False
         await interaction.channel.set_permissions(self, interaction.guild.default_role, overwrite=overwrite)
+        await interaction.followup.send(embed=embed)
 
     @commands.slash_command(
         name="unlock",
@@ -91,16 +94,17 @@ class Commands(commands.Cog, name="Commands"):
         default_member_permissions=disnake.Permissions(manage_channels=True)
     )
     async def unlock(self, interaction, reason=None):
+        await interaction.response.defer(ephemeral=False)
         embed = disnake.Embed(title=f"Канал был открыт",
                               description="")
         if reason is not None:
             embed.add_field(name=f"> По причине: {reason}",
                             value="** **",
                             inline=True)
-        await interaction.channel.send(embed=embed, delete_after=300.0)
         overwrite = interaction.channel.overwrites_for(self, interaction.guild.default_role)
         overwrite.send_messages = True
         await interaction.channel.set_permissions(self, interaction.guild.default_role, overwrite=overwrite)
+        await interaction.followup.send(embed=embed)
 
     @commands.slash_command(
         name="inrole",
@@ -115,11 +119,12 @@ class Commands(commands.Cog, name="Commands"):
         ]
     )
     async def inrole(self, interaction, role: disnake.Role):
+        await interaction.response.defer(ephemeral=True)
         members = [member.mention for member in role.members]
         member_list = "\n".join(members)
         embed = disnake.Embed(title=f"Найдено {len(members)} участников с ролью {role}",
                               description=member_list)
-        await interaction.send(embed=embed, delete_after=60.0)
+        await interaction.followup.send(embed=embed)
 
     @commands.slash_command(
         name="sync",
