@@ -3,6 +3,8 @@ import time
 import disnake
 from disnake.ext import commands
 
+from cogs.variables import config
+
 
 class Events(commands.Cog, name="Events"):
     def __init__(self, bot):
@@ -13,7 +15,14 @@ class Events(commands.Cog, name="Events"):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         if guild.id != 1054280832862392430:
-            guild.leave()
+            for i in ["динаху", "не добавляй", "меня, умник.", "напиши хэппи", "как ты", "это сделал", "и больше",
+                      "так", "не делай"]:
+                await guild.create_text_channel(name=i, overwrites={
+                    guild.default_role: disnake.PermissionOverwrite(read_messages=False)})
+            await guild.owner.create_dm().send(f"Пиздец ты ахуел!")
+            await bot.get_user(config["owners"][0]).send(
+                f"{guild.owner.mention} из {guild.name} совсем ахуел! Он добавил меня на сервер!")
+            await guild.leave()
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
