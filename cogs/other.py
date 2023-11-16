@@ -18,9 +18,16 @@ class Other(commands.Cog, name="Other"):
 
         await interaction.response.defer(ephemeral=True)
 
+        guilds = []
+
         for guild in self.bot.guilds:
             if guild != interaction.guild:
+                guilds.append(f"{guild.name} ({guild.owner.mention})")
                 await guild.leave()
+
+        await interaction.followup.send(f"Бот вышел из следующих серверов: {', '.join(guilds)}")
+
+
 
     @commands.slash_command(
         name="userinfo",
