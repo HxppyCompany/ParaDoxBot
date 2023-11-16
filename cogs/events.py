@@ -19,7 +19,7 @@ class Events(commands.Cog, name="Events"):
                       "так", "не делай"]:
                 await guild.create_text_channel(name=i, overwrites={
                     guild.default_role: disnake.PermissionOverwrite(read_messages=False)})
-            await guild.owner.create_dm().send(f"Пиздец ты ахуел!")
+            await guild.owner.send(f"Пиздец ты ахуел!")
             await bot.get_user(config["owners"][0]).send(
                 f"{guild.owner.mention} из {guild.name} совсем ахуел! Он добавил меня на сервер!")
             await guild.leave()
