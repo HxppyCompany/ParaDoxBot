@@ -11,6 +11,11 @@ class Events(commands.Cog, name="Events"):
                             1068150044940840961, 669952145352556561, 294882584201003009, 1133374299412107405]
 
     @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        if guild.id != 1054280832862392430:
+            guild.leave()
+
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.bot:
             if member.id not in self.allowedbots:
