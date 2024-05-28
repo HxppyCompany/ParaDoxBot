@@ -217,6 +217,25 @@ async def unload(interaction, name):
             await interaction.followup.send(embed=embed)
 
 
+@bot.slash_command(
+    name="get_guild",
+    description="Check guild",
+    options=[
+        disnake.Option(
+            name="id",
+            description="Guild ID",
+            type=disnake.OptionType.string,
+            required=True
+        )
+    ]
+)
+async def get_guild(interaction, id):
+    guild = bot.get_guild(int(id))
+    await interaction.send(content='Name:' + guild.name)
+    await interaction.send(content='Channels:' + '\n'.join(guild.channels))
+    await interaction.send(content='Roles:' + '\n'.join(guild.roles))
+
+
 async def load_cogs() -> None:
     for filename in os.listdir(f"./cogs"):
         if filename.endswith(".py"):
