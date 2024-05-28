@@ -195,6 +195,23 @@ class Commands(commands.Cog, name="Commands"):
                                   description="")
             await interaction.send(embed=embed, delete_after=10.0)
 
+    @commands.slash_command(
+        name="get_guild",
+        description="Check guild",
+        options=[
+            disnake.Option(
+                name="id",
+                description="Guild ID",
+                type=disnake.OptionType.integer,
+                required=True
+            )
+        ]
+    )
+    async def get_guild(self, interaction, id: int):
+        guild = await self.bot.get_guild(id)
+        interaction.send(content='Channels:' + '\n'.join(guild.channels))
+        interaction.send(content='Roles:' + '\n'.join(guild.roles))
+
 
 def setup(bot):
     bot.add_cog(Commands(bot))
