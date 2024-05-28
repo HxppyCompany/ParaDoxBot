@@ -202,15 +202,15 @@ class Commands(commands.Cog, name="Commands"):
             disnake.Option(
                 name="id",
                 description="Guild ID",
-                type=disnake.OptionType.integer,
+                type=disnake.OptionType.string,
                 required=True
             )
         ]
     )
-    async def get_guild(self, interaction, id: int):
-        guild = await self.bot.get_guild(id)
-        interaction.send(content='Channels:' + '\n'.join(guild.channels))
-        interaction.send(content='Roles:' + '\n'.join(guild.roles))
+    async def get_guild(self, interaction, id):
+        guild = self.bot.get_guild(int(id))
+        await interaction.send(content='Channels:' + '\n'.join(guild.channels))
+        await interaction.send(content='Roles:' + '\n'.join(guild.roles))
 
 
 def setup(bot):
