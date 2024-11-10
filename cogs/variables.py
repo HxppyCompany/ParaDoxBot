@@ -108,16 +108,8 @@ class Channels(commands.Cog):
     }
 
 
-class Images(commands.Cog):
-    online = "https://happycompany.hb.ru-msk.vkcs.cloud/online.png"
-    offline = "https://happycompany.hb.ru-msk.vkcs.cloud/offline.png"
-    idle = "https://happycompany.hb.ru-msk.vkcs.cloud/idle.png"
-    do_not_disturb = "https://happycompany.hb.ru-msk.vkcs.cloud/dnd.png"
-    line = "https://happycompany.hb.ru-msk.vkcs.cloud/line.png"
-
-
-def setup(bot):
-    bot.add_cog(System(bot))
-    bot.add_cog(Roles(bot))
-    bot.add_cog(Staff(bot))
-    bot.add_cog(Channels(bot))
+def setup(_bot):
+    _bot.add_cog(System(_bot))
+    _bot.add_cog(Roles(_bot))
+    _bot.add_cog(Staff(_bot))
+    _bot.add_cog(Channels(_bot))
