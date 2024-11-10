@@ -1,29 +1,13 @@
-import json
 import os
 import platform
 import random
-import sys
 import time
 import traceback
 
 import disnake
-from disnake import Intents
 from disnake.ext import commands, tasks
-from disnake.ext.commands import Bot
 
-from pymongo.mongo_client import MongoClient
-
-if not os.path.isfile("config.json"):
-    sys.exit("Файл 'config.json' не обнаружен или повреждён!")
-else:
-    with open("config.json") as file:
-        config = json.load(file)
-
-database = MongoClient(config["mongodb"])
-
-intents = Intents.all()
-bot = Bot(intents=intents)
-bot.config = config
+from cogs.variables import bot, config, logger
 
 
 class Check(commands.Bot):
@@ -39,43 +23,17 @@ if __name__ == '__main__':
 @bot.event
 async def on_ready() -> None:
     if check.loaded:
-        print('╔═══════════INFO═══════════╗')
-        print("║ HappyBot переподключился ║")
-        print("╚══════════════════════════╝")
+        logger.info('ParaDoxBot переподключился')
     else:
-        print("╔══════════════════════════════════════════════════════════════════════════════╗")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║")
-        print("║░░░░░░██╗░░██╗░█████╗░██████╗░██████╗░██╗░░░██╗██████╗░░█████╗░████████╗░░░░░░║")
-        print("║░░░░░░██║░░██║██╔══██╗██╔══██╗██╔══██╗╚██╗░██╔╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░║")
-        print("║░░░░░░███████║███████║██████╔╝██████╔╝░╚████╔╝░██████╦╝██║░░██║░░░██║░░░░░░░░░║")
-        print("║░░░░░░██╔══██║██╔══██║██╔═══╝░██╔═══╝░░░╚██╔╝░░██╔══██╗██║░░██║░░░██║░░░░░░░░░║")
-        print("║░░░░░░██║░░██║██║░░██║██║░░░░░██║░░░░░░░░██║░░░██████╦╝╚█████╔╝░░░██║░░░░░░░░░║")
-        print("║░░░░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░░░░░░░░╚═╝░░░╚═════╝░░╚════╝░░░░╚═╝░░░░░░░░░║")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄▄░█▄█░░░█░█░▄▀█░█▀█░█▀█░█▄█░█▀▀░▄▀█░█▄░█░░║")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█▄█░░█░░░░█▀█░█▀█░█▀▀░█▀▀░░█░░█▀░░█▀█░█░▀█░░║")
-        print("║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║")
-        print("╠══════════════════════════════════════════════════════════════════════════════╣")
-        print(f"║ DISNAKE: {disnake.__version__}")
-        print(f"║ PYTHON: {platform.python_version()}")
-        print(f"║ OS: {platform.system()} {platform.release()} ({os.name})")
-        print("╚══════════════════════════════════════════════════════════════════════════════╝")
-        print("Установка расширений...")
+        logger.info(f"DISNAKE: {disnake.__version__}")
+        logger.info(f"PYTHON: {platform.python_version()}")
+        logger.info(f"OS: {platform.system()} {platform.release()} ({os.name})")
+        logger.debug("Установка расширений...")
         await load_cogs()
-        print("Загрузка расширений завершена!")
-        print("-------------------")
-        print("Подключаюсь к MongoDB...")
-        try:
-            database.admin.command('ping')
-            print(f"[MBD] Соединение установлено!")
-        except Exception as e:
-            print(f"[MDB]|[ERROR] Ошибка при попытке обращения к MongoDB: {e}.")
-        print("-------------------")
-        print("Запуск цикла статуса...")
+        logger.debug("Загрузка расширений завершена!\n")
+        logger.debug("Запуск цикла статуса...")
         status_task.start()
-        print("Цикл статуса успешно запущен!")
-        print("-------------------")
+        logger.debug("Цикл статуса успешно запущен!\n")
 
 
 @tasks.loop(minutes=10)
@@ -113,19 +71,19 @@ async def reload(interaction, name):
                         bot.unload_extension(f"cogs.{extension}")
                     except Exception as e:
                         exception = f"{type(e).__name__}: {e}."
-                        print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+                        logger.error(f"[EXT] Произошла ошибка при попытке выгрузить расширение {exception}")
 
                     try:
                         bot.load_extension(f"cogs.{extension}")
                         ext_end = time.time()
-                        print(
+                        logger.bebug(
                             f"[EXT] расширение {extension} успешно перезагружено ({(ext_end - ext_start) * 1000:.2f}мс)")
                         embed = disnake.Embed(title=f"Расширение {extension} перезагружено",
                                               description="")
                         await interaction.send(embed=embed, delete_after=10.0)
                     except Exception as e:
                         exception = f"{type(e).__name__}: {e}."
-                        print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
+                        logger.error(f"[EXT] Произошла ошибка при попытке загрузить расширение {exception}")
                         embed = disnake.Embed(title=f"Расширение {extension} не удалось перезагрузить",
                                               description=f"{exception}")
                         await interaction.followup.send(embed=embed)
@@ -135,18 +93,18 @@ async def reload(interaction, name):
                 bot.unload_extension(f"cogs.{name}")
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}."
-                print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+                logger.error(f"[EXT] Произошла ошибка при попытке выгрузить расширение {exception}")
 
             try:
                 bot.load_extension(f"cogs.{name}")
                 ext_end = time.time()
-                print(f"[EXT] расширение {name} успешно перезагружено ({(ext_end - ext_start) * 1000:.2f}мс)")
+                logger.debug(f"[EXT] расширение {name} успешно перезагружено ({(ext_end - ext_start) * 1000:.2f}мс)")
                 embed = disnake.Embed(title=f"Расширение {name} перезагружено",
                                       description="")
                 await interaction.followup.send(embed=embed)
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}."
-                print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
+                logger.error(f"[EXT] Произошла ошибка при попытке загрузить расширение {exception}")
                 embed = disnake.Embed(title=f"Расширение {name} не удалось перезагрузить",
                                       description=f"{exception}")
                 await interaction.followup.send(embed=embed)
@@ -172,13 +130,13 @@ async def load(interaction, name):
             ext_start = time.time()
             bot.load_extension(f"cogs.{name}")
             ext_end = time.time()
-            print(f"[EXT] расширение {name} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
+            logger.debug(f"[EXT] расширение {name} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             embed = disnake.Embed(title=f"Расширение {name} загружено",
                                   description="")
             await interaction.followup.send(embed=embed)
         except Exception as e:
             exception = f"{type(e).__name__}: {e}."
-            print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
+            logger.error(f"[EXT] Произошла ошибка при попытке загрузить расширение {exception}")
             embed = disnake.Embed(title=f"Расширение {name} не удалось загрузить",
                                   description=f"{exception}")
             await interaction.followup.send(embed=embed)
@@ -205,35 +163,16 @@ async def unload(interaction, name):
             ext_start = time.time()
             bot.unload_extension(f"cogs.{name}")
             ext_end = time.time()
-            print(f"[EXT] расширение {name} успешно выгружено ({(ext_end - ext_start) * 1000:.2f}мс)")
+            logger.debug(f"[EXT] расширение {name} успешно выгружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             embed = disnake.Embed(title=f"Расширение {name} выгружено",
                                   description="")
             await interaction.followup.send(embed=embed)
         except Exception as e:
             exception = f"{type(e).__name__}: {e}."
-            print(f"[EXT]|[ERROR] Произошла ошибка при попытке выгрузить расширение {exception}")
+            logger.error(f"[EXT] Произошла ошибка при попытке выгрузить расширение {exception}")
             embed = disnake.Embed(title=f"Расширение {name} не удалось загрузить",
                                   description=f"{exception}")
             await interaction.followup.send(embed=embed)
-
-
-@bot.slash_command(
-    name="get_guild",
-    description="Check guild",
-    options=[
-        disnake.Option(
-            name="id",
-            description="Guild ID",
-            type=disnake.OptionType.string,
-            required=True
-        )
-    ]
-)
-async def get_guild(interaction, id):
-    guild = bot.get_guild(int(id))
-    await interaction.send(content='Name:' + guild.name)
-    await interaction.send(content='Channels:' + '\n'.join(guild.channels))
-    await interaction.send(content='Roles:' + '\n'.join(guild.roles))
 
 
 async def load_cogs() -> None:
@@ -244,11 +183,11 @@ async def load_cogs() -> None:
                 ext_start = time.time()
                 bot.load_extension(f"cogs.{extension}")
                 ext_end = time.time()
-                print(f"[EXT] расширение {extension} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
+                logger.debug(f"[EXT] расширение {extension} успешно загружено ({(ext_end - ext_start) * 1000:.2f}мс)")
             except Exception as e:
                 exception = (f"{type(e).__name__}: {e}.\n"
                              f"{traceback.format_exc()}")
-                print(f"[EXT]|[ERROR] Произошла ошибка при попытке загрузить расширение {exception}")
+                logger.error(f"[EXT] Произошла ошибка при попытке загрузить расширение {exception}")
 
 
 bot.run(config["token"])

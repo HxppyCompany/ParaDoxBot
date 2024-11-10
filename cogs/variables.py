@@ -1,12 +1,72 @@
-import json
 import datetime
+import json
+import os
+import sys
+import colorama
 
+from disnake import Intents
 from disnake.ext import commands
+from disnake.ext.commands import Bot
 
-from pymongo.mongo_client import MongoClient
+from cogs.logger import Logger
 
-with open("config.json") as file:
-    config = json.load(file)
+__version__ = "0.1.0"
+
+if not os.path.isfile("config.json"):
+    sys.exit("Файл 'config.json' не обнаружен или повреждён!")
+else:
+    with open("config.json") as file:
+        config = json.load(file)
+
+intents = Intents.all()
+bot = Bot(intents=intents)
+
+owners = config['owners']
+
+colorama.init()
+fore = colorama.Fore
+colors = {
+    0: fore.RESET,
+    1: fore.WHITE,
+    2: fore.RED,
+    3: fore.YELLOW,
+    4: fore.GREEN,
+    5: fore.CYAN,
+    6: fore.BLUE,
+    7: fore.MAGENTA,
+    8: fore.BLACK,
+    9: fore.LIGHTWHITE_EX,
+    10: fore.LIGHTRED_EX,
+    11: fore.LIGHTYELLOW_EX,
+    12: fore.LIGHTGREEN_EX,
+    13: fore.LIGHTCYAN_EX,
+    14: fore.LIGHTBLUE_EX,
+    15: fore.LIGHTMAGENTA_EX,
+    16: fore.LIGHTBLACK_EX,
+    'Reset': fore.RESET,
+    'White': fore.WHITE,
+    'Red': fore.RED,
+    'Yellow': fore.YELLOW,
+    'Green': fore.GREEN,
+    'Cyan': fore.CYAN,
+    'Blue': fore.BLUE,
+    'Magenta': fore.MAGENTA,
+    'Black': fore.BLACK,
+    'WhiteEx': fore.LIGHTWHITE_EX,
+    'RedEx': fore.LIGHTRED_EX,
+    'YellowEx': fore.LIGHTYELLOW_EX,
+    'GreenEx': fore.LIGHTGREEN_EX,
+    'CyanEx': fore.LIGHTCYAN_EX,
+    'BlueEx': fore.LIGHTBLUE_EX,
+    'MagentaEx': fore.LIGHTMAGENTA_EX,
+    'BlackEx': fore.LIGHTBLACK_EX
+}
+
+logger = Logger(
+    level='info',
+    strfmt=f"{colors[16]}<date> <level> {colors[9]}<message> {colors[16]}<module>",
+    # datefmt="%H:%M:%S",
+)
 
 
 class System(commands.Cog):
@@ -15,13 +75,6 @@ class System(commands.Cog):
     @staticmethod
     async def get_time(current_time):
         return current_time.astimezone(datetime.timezone(datetime.timedelta(hours=3))).strftime("%H:%M, %b %d, %Y")
-
-
-class DataBase(commands.Cog):
-    database = MongoClient(config["mongodb"])
-    users = database.USERS
-    localban = users.localban
-    validators = users.validators
 
 
 class Guild(commands.Cog):
@@ -65,7 +118,6 @@ class Images(commands.Cog):
 
 def setup(bot):
     bot.add_cog(System(bot))
-    bot.add_cog(DataBase(bot))
     bot.add_cog(Roles(bot))
     bot.add_cog(Staff(bot))
     bot.add_cog(Channels(bot))

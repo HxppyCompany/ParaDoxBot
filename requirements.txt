@@ -1,11 +1,2 @@
-disnake
-pymongo
-dnspython
-idna
-pip
-attrs
-multidict
-aiohttp
-yarl
-aiosignal
-frozenlist
+disnake~=2.9.2
+colorama~=0.4.6
