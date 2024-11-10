@@ -83,8 +83,11 @@ class Guild(commands.Cog):
 
 class Roles(commands.Cog):
     unverify = 1091970906181619722
-    girl = 1092494103289270352
-    boy = 1092494271740903454
+    y13 = 1
+    y15 = 1
+    y18 = 1
+    y20 = 1
+    y25 = 1
     localban = 1092551947871060100
     bot = 1092508778445951117
     staff = 1091972433545801772

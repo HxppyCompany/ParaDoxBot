@@ -1,96 +1,103 @@
 import disnake
 from disnake.ext import commands
 
-from cogs.variables import System
+from cogs.variables import System, logger
 from cogs.variables import Roles
 from cogs.variables import Staff
 from cogs.variables import Channels
 
+
+async def verify(self, role, interaction):
+    member = interaction.guild.get_member(self.user.id)
+    staff = interaction.guild.get_role(Staff.validator)
+    if staff not in interaction.user.roles:
+        embed = disnake.Embed(title="Недостаточно прав",
+                              description="")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        return
+
+    verify_chs = [interaction.guild.get_channel(i) for i in Channels.verify]
+    member_in_voice = False
+    for ch in verify_chs:
+        if member in ch.members:
+            member_in_voice = True
+
+    if not member_in_voice:
+        embed = disnake.Embed(title="Человек не в голосовом канале",
+                              description="")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        return
+
+    try:
+        unverify = interaction.guild.get_role(Roles.unverify)
+        await member.remove_roles(unverify)
+    except:
+        pass
+
+    await member.add_roles(role)
+    await interaction.message.edit(view=None)
+    embed = disnake.Embed(title=f"{member} был(а) верифицирован(а) саппортом {interaction.user}",
+                          description="")
+    await interaction.response.send_message(embed=embed)
+    try:
+        m_embed = disnake.Embed(title=f"Саппорт {interaction.user} верифицировал тебя",
+                                description="Приятного времяпрепровождения на нашем сервере!")
+        await member.send(embed=m_embed)
+    except Exception as e:
+        logger.error(f"{e}")
+
+
 '''BUTTONS'''
 
 
-class GirlButton(disnake.ui.Button):
+class Y13Button(disnake.ui.Button):
     def __init__(self, user):
-        super().__init__(style=disnake.ButtonStyle.blurple, label="Девушка", custom_id="verifyg")
+        super().__init__(style=disnake.ButtonStyle.blurple, label="13+", custom_id="verify13")
         self.user = user
 
     async def callback(self, interaction):
-        member = interaction.guild.get_member(self.user.id)
-        staff = interaction.guild.get_role(Staff.validator)
-        if staff not in interaction.user.roles:
-            embed = disnake.Embed(title="Недостаточно прав",
-                                  description="")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        verify_chs = [interaction.guild.get_channel(i) for i in Channels.verify]
-        member_in_voice = False
-        for ch in verify_chs:
-            if member in ch.members:
-                member_in_voice = True
-        if not member_in_voice:
-            embed = disnake.Embed(title="Человек не в голосовом канале",
-                                  description="")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        try:
-            unverify = interaction.guild.get_role(Roles.unverify)
-            await member.remove_roles(unverify)
-        except:
-            pass
-        role = interaction.guild.get_role(Roles.girl)
-        await member.add_roles(role)
-        await interaction.message.edit(view=None)
-        embed = disnake.Embed(title=f"{member} была верефицирована валидатором {interaction.user}",
-                              description="")
-        await interaction.response.send_message(embed=embed)
-        try:
-            m_embed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
-                                    description="Приятного времяпрепровождения на нашем сервере!")
-            await member.send(embed=m_embed)
-        except Exception as e:
-            print(f"[ERROR] {e}")
+        role = interaction.guild.get_role(Roles.y13)
+        await verify(self, role, interaction)
 
 
-class BoyButton(disnake.ui.Button):
+class Y15Button(disnake.ui.Button):
     def __init__(self, user):
-        super().__init__(style=disnake.ButtonStyle.blurple, label="Парень", custom_id="verifym")
+        super().__init__(style=disnake.ButtonStyle.blurple, label="15+", custom_id="verify15")
         self.user = user
 
     async def callback(self, interaction):
-        member = interaction.guild.get_member(self.user.id)
-        staff = interaction.guild.get_role(Staff.validator)
-        if staff not in interaction.user.roles:
-            embed = disnake.Embed(title="Недостаточно прав",
-                                  description="")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        verify_chs = [interaction.guild.get_channel(i) for i in Channels.verify]
-        member_in_voice = False
-        for ch in verify_chs:
-            if member in ch.members:
-                member_in_voice = True
-        if not member_in_voice:
-            embed = disnake.Embed(title="Человек не в голосовом канале",
-                                  description="")
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
-        try:
-            unverify = interaction.guild.get_role(Roles.unverify)
-            await member.remove_roles(unverify)
-        except:
-            pass
-        role = interaction.guild.get_role(Roles.boy)
-        await member.add_roles(role)
-        await interaction.message.edit(view=None)
-        embed = disnake.Embed(title=f"{member} был верифицирован валидатором {interaction.user}",
-                              description="")
-        await interaction.response.send_message(embed=embed)
-        try:
-            m_embed = disnake.Embed(title=f"Валидатор {interaction.user} верифицировал тебя",
-                                    description="Приятного времяпрепровождения на нашем сервере!")
-            await member.send(embed=m_embed)
-        except:
-            pass
+        role = interaction.guild.get_role(Roles.y15)
+        await verify(self, role, interaction)
+
+
+class Y18Button(disnake.ui.Button):
+    def __init__(self, user):
+        super().__init__(style=disnake.ButtonStyle.blurple, label="18+", custom_id="verify18")
+        self.user = user
+
+    async def callback(self, interaction):
+        role = interaction.guild.get_role(Roles.y18)
+        await verify(self, role, interaction)
+
+
+class Y20Button(disnake.ui.Button):
+    def __init__(self, user):
+        super().__init__(style=disnake.ButtonStyle.blurple, label="20+", custom_id="verify20")
+        self.user = user
+
+    async def callback(self, interaction):
+        role = interaction.guild.get_role(Roles.y20)
+        await verify(self, role, interaction)
+
+
+class Y25Button(disnake.ui.Button):
+    def __init__(self, user):
+        super().__init__(style=disnake.ButtonStyle.blurple, label="25+", custom_id="verify25")
+        self.user = user
+
+    async def callback(self, interaction):
+        role = interaction.guild.get_role(Roles.y25)
+        await verify(self, role, interaction)
 
 
 class RejectButton(disnake.ui.Button):
@@ -113,8 +120,8 @@ class RejectButton(disnake.ui.Button):
             m_embed = disnake.Embed(title=f"Валидатор {interaction.user} недопустил тебя",
                                     description="Подать заявку на апелляцию ты можешь в канале `『📃』appeal`")
             await member.send(embed=m_embed)
-        except:
-            pass
+        except Exception as e:
+            logger.error(f"{e}")
         unverify = interaction.guild.get_role(Roles.unverify)
         await member.remove_roles(unverify)
         localban_role = interaction.guild.get_role(Roles.localban)
@@ -125,8 +132,11 @@ class RejectButton(disnake.ui.Button):
 class VerifyView(disnake.ui.View):
     def __init__(self, user):
         super().__init__(timeout=None)
-        self.add_item(GirlButton(user))
-        self.add_item(BoyButton(user))
+        self.add_item(Y13Button(user))
+        self.add_item(Y15Button(user))
+        self.add_item(Y18Button(user))
+        self.add_item(Y20Button(user))
+        self.add_item(Y25Button(user))
         self.add_item(RejectButton(user))
 
 
@@ -140,8 +150,8 @@ class Verification(commands.Cog, name='Verification'):
             try:
                 bot = member.guild.get_role(Roles.bot)
                 return await member.add_roles(bot)
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"{e}")
         rules_channel = self.bot.get_channel(1054280833361514589)
         staff_channel = self.bot.get_channel(Channels.verification)
         staff = member.guild.get_role(Staff.validator)
@@ -149,8 +159,8 @@ class Verification(commands.Cog, name='Verification'):
             unverify = member.guild.get_role(Roles.unverify)
             localban_role = member.guild.get_role(Roles.localban)
             await member.add_roles(unverify)
-        except:
-            pass
+        except Exception as e:
+            logger.error(f"{e}")
 
         'EMBED'
         embed = disnake.Embed(title="Новый пользователь",
@@ -167,8 +177,8 @@ class Verification(commands.Cog, name='Verification'):
         try:
             embed.set_thumbnail(
                 url=member.avatar.url)
-        except:
-            pass
+        except Exception as e:
+            logger.error(f"{e}")
 
         'DM_EMBED'
         dm_embed = disnake.Embed(title="Добро пожаловать на HappyServer!",
@@ -182,8 +192,8 @@ class Verification(commands.Cog, name='Verification'):
 
         try:
             await member.send(embed=dm_embed)
-        except:
-            pass
+        except Exception as e:
+            logger.error(f"{e}")
         await staff_channel.send(content=f"НОВЫЙ ПОЛЬЗОВАТЕЛЬ {staff.mention}",
                                  delete_after=0)
         await staff_channel.send(embed=embed,
